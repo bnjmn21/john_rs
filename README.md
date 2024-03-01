@@ -3,13 +3,13 @@
 ![GitHub License](https://img.shields.io/github/license/bnjmn21/john_rs)
 ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/bnjmn21/john_rs)
 [![dependency status](https://deps.rs/repo/github/bnjmn21/john_rs/status.svg)](https://deps.rs/repo/github/bnjmn21/john_rs)
-![Website](https://img.shields.io/website?url=https%3A%2F%2Fbnjmn21.github.io%2Fjohn_rs)
+[![Website](https://img.shields.io/website?url=https%3A%2F%2Fbnjmn21.github.io%2Fjohn_rs)](https://bnjmn21.github.io/john_rs)
 
 ## Overview
 
 An emulator for an imaginary basic John von Neumann architecture(s) written in Rust with [egui](https://github.com/emilk/egui/), inspired by the [JOHNNY simulator](https://sourceforge.net/projects/johnnysimulator/).
 
-[*View the web version here!*](bnjmn21.github.io/john_rs)
+[*View the web version here!*](https://bnjmn21.github.io/john_rs)
 
 ## Differences to JOHNNY
 

@@ -3,7 +3,7 @@
 ![GitHub License](https://img.shields.io/github/license/bnjmn21/john_rs)
 ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/bnjmn21/john_rs)
 [![dependency status](https://deps.rs/repo/github/bnjmn21/john_rs/status.svg)](https://deps.rs/repo/github/bnjmn21/john_rs)
-![Website](https://img.shields.io/website?url=bnjmn21.github.io%2Fjohn_rs)
+![Website](https://img.shields.io/website?url=https%3A%2F%2Fbnjmn21.github.io%2Fjohn_rs)
 
 ## Overview
 

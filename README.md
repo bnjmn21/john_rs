@@ -1,76 +1,104 @@
-# eframe template
+# John.rs
 
-[![dependency status](https://deps.rs/repo/github/emilk/eframe_template/status.svg)](https://deps.rs/repo/github/emilk/eframe_template)
-[![Build Status](https://github.com/emilk/eframe_template/workflows/CI/badge.svg)](https://github.com/emilk/eframe_template/actions?workflow=CI)
+![GitHub License](https://img.shields.io/github/license/bnjmn21/john_rs)
+![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/bnjmn21/john_rs)
+[![dependency status](https://deps.rs/repo/github/bnjmn21/john_rs/status.svg)](https://deps.rs/repo/github/bnjmn21/john_rs)
 
-This is a template repo for [eframe](https://github.com/emilk/egui/tree/master/crates/eframe), a framework for writing apps using [egui](https://github.com/emilk/egui/).
+## Overview
 
-The goal is for this to be the simplest way to get started writing a GUI app in Rust.
+An emulator for an imaginary basic John von Neumann architecture(s) written in Rust with [egui](https://github.com/emilk/egui/), inspired by the [JOHNNY simulator](https://sourceforge.net/projects/johnnysimulator/).
 
-You can compile your app natively or for the web, and share it using Github Pages.
+[*View the web version here!*](bnjmn21.github.io/john_rs)
 
-## Getting started
+## Differences to JOHNNY
 
-Start by clicking "Use this template" at https://github.com/emilk/eframe_template/ or follow [these instructions](https://docs.github.com/en/free-pro-team@latest/github/creating-cloning-and-archiving-repositories/creating-a-repository-from-a-template).
+### Additions
 
-Change the name of the crate: Chose a good name for your project, and change the name to it in:
-* `Cargo.toml`
-    * Change the `package.name` from `eframe_template` to `your_crate`.
-    * Change the `package.authors`
-* `main.rs`
-    * Change `eframe_template::TemplateApp` to `your_crate::TemplateApp`
-* `index.html`
-    * Change the `<title>eframe template</title>` to `<title>your_crate</title>`. optional.
-* `assets/sw.js`
-  * Change the `'./eframe_template.js'` to `./your_crate.js` (in `filesToCache` array)
-  * Change the `'./eframe_template_bg.wasm'` to `./your_crate_bg.wasm` (in `filesToCache` array)
+- Customisable RAM size / max integer:
+  - **Decimal:**
+  - 1,000 / 15,999 (default)
+  - 10,000 / 159,999 (6 digits)
+  - **Binary:**
+  - 4,096 / 65,535 (16 bits)
+  - 65,536 / 1,048,575 (20 bits)
+  - 1,048,576 / 16,777,216 (might crash your pc)
+- Additional instructions in binary mode ([see below](#additional-instructions-in-binary-mode))
 
-### Learning about egui
+### Limitations
 
-`src/app.rs` contains a simple example app. This is just to give some inspiration - most of it can be removed if you like.
+- No micro-instructions and therefore no custom instruction sets.
+- No control unit simulation.
 
-The official egui docs are at <https://docs.rs/egui>. If you prefer watching a video introduction, check out <https://www.youtube.com/watch?v=NtUkr_z7l84>. For inspiration, check out the [the egui web demo](https://emilk.github.io/egui/index.html) and follow the links in it to its source code.
+## Instruction Set
 
-### Testing locally
+### Default
 
-Make sure you are using the latest version of stable rust by running `rustup update`.
+| Op | Name | Description | Parameter |
+|----|------|-------------|-----------|
+|`01`|`TAKE`|Load a value from memory into the accumulator|The address to load from|
+|`02`|`ADD` |Add a number to the accumulator|The address to take the number from|
+|`03`|`SUB` |Subtract a number from the accumulator|The address to take the number from|
+|`04`|`SAVE`|Store the value in the accumulator to memory|The address to save to|
+|`05`|`JMP` |Jump to a certain address in memory|The address to jump to|
+|`06`|`TST` |Jump 2 addresses forwards if the accumulator == 0, otherwise jump 1 as usual| |
+|`07`|`INC` |Increment the value in an address by 1|The address whose value is to be incremented|
+|`08`|`DEC` |Decrement the value in an address by 1|The address whose value is to be decremented|
+|`09`|`NULL`|Set the accumulator and an address to 0|The address whose value shall no longer be positive|
+|`10`|`HLT` |Signifies the end of the program||
 
-`cargo run --release`
+### Additional Instructions in Binary Mode
 
-On Linux you need to first run:
+| Op | Name | Description | Parameter |
+|----|------|-------------|-----------|
+|`11`|`AND` |*Bitwise AND* with a value,|whose address is specified here|
+|`12`|`OR`  |*Bitwise OR* with a value,|whose address is specified here|
+|`13`|`XOR`  |*Bitwise XOR* with a value,|whose address is specified here|
+|`14`|`LLS`  |*Logical left shift* with a value,|whose address is specified here|
+|`15`|`LRS`  |*Logical right shift* with a value,|whose address is specified here|
 
-`sudo apt-get install libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev libssl-dev`
+### Notes
 
-On Fedora Rawhide you need to run:
+- *XOR*ing a value with the max int (all ones) is the same as *logical NOT*.
+- In binary mode operations such as add and sub are *wrapping* (`1110 + 0010 = 0000`), while in decimal mode they are *saturating* (`15,950 + 100 = 15,999`).
+- When executing an undefined opcode (e.g. `00`), the program stops.
 
-`dnf install clang clang-devel clang-tools-extra libxkbcommon-devel pkg-config openssl-devel libxcb-devel gtk3-devel atk fontconfig-devel`
+## *Self Modifying Code 😨😮*
 
-### Web Locally
+Many experienced programmers consider *self modifying code 😨😮* to be the single worst thing to have descended to our planet, however for some problems in John.rs / JOHNNY writing self modifying code is necessary.
 
-You can compile your app to [WASM](https://en.wikipedia.org/wiki/WebAssembly) and publish it as a web page.
+The reason for this negative connotation is the one big issue with self modifying code:
 
-We use [Trunk](https://trunkrs.dev/) to build for web target.
-1. Install the required target with `rustup target add wasm32-unknown-unknown`.
-2. Install Trunk with `cargo install --locked trunk`.
-3. Run `trunk serve` to build and serve on `http://127.0.0.1:8080`. Trunk will rebuild automatically if you edit the project.
-4. Open `http://127.0.0.1:8080/index.html#dev` in a browser. See the warning below.
+- It modifies itself
 
-> `assets/sw.js` script will try to cache our app, and loads the cached version when it cannot connect to server allowing your app to work offline (like PWA).
-> appending `#dev` to `index.html` will skip this caching, allowing us to load the latest builds during development.
+This means your code will probably only run once. Then you can throw you code out the window and start over. Unless you program your code to do so automatically, you will have to painstakingly reset your code after every run. If there just was to tool to do all of this...
 
-### Web Deploy
-1. Just run `trunk build --release`.
-2. It will generate a `dist` directory as a "static html" website
-3. Upload the `dist` directory to any of the numerous free hosting websites including [GitHub Pages](https://docs.github.com/en/free-pro-team@latest/github/working-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site).
-4. we already provide a workflow that auto-deploys our app to GitHub pages if you enable it.
-> To enable Github Pages, you need to go to Repository -> Settings -> Pages -> Source -> set to `gh-pages` branch and `/` (root).
->
-> If `gh-pages` is not available in `Source`, just create and push a branch called `gh-pages` and it should be available.
+### Introducing: John.rs
 
-You can test the template app at <https://emilk.github.io/eframe_template/>.
+John.rs automatically saves a copy of your code before you run it, and rewinds to that copy once you reset the cpu.
 
-## Updating egui
+## File Formats
 
-As of 2023, egui is in active development with frequent releases with breaking changes. [eframe_template](https://github.com/emilk/eframe_template/) will be updated in lock-step to always use the latest version of egui.
+### JRS (`.jrs.json`)
 
-When updating `egui` and `eframe` it is recommended you do so one version at the time, and read about the changes in [the egui changelog](https://github.com/emilk/egui/blob/master/CHANGELOG.md) and [eframe changelog](https://github.com/emilk/egui/blob/master/crates/eframe/CHANGELOG.md).
+Stores your settings, emulator state, and everything else.
+In the web version your current settings will be automatically saved in `local_storage` so saving is not needed.
+(I wouldn't rely on this though since browsers are weird)
+
+### RAM (`.ram`)
+
+Stores just the RAM contents in binary.
+*Incompatible with JOHNNY .ram files.*
+Thankfully there is `ram2ram.py`.
+To convert any old .ram file to the new .ram format,
+
+- Download `ram2ram.py`
+- Run `python ram2ram.py <file name of your old .ram file> <file name of your new .ram file>`
+
+`.ram` files can also be compressed using gzip to a `.ram.gz` file.
+
+## Links & Credits
+
+- The [web version](bnjmn21.github.io/john_rs)
+- The [JOHNNY simulator](https://sourceforge.net/projects/johnnysimulator/)
+- Another [JOHNNY clone](https://dev.inf-schule.de/content/12_rechner/4_johnny/johnny3/) for the web
+- The [egui](https://github.com/emilk/egui/) library

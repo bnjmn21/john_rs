@@ -1,6 +1,6 @@
 {
-  "name": "egui Template PWA",
-  "short_name": "egui-template-pwa",
+  "name": "John.rs",
+  "short_name": "john-rs-pwa",
   "icons": [
     {
       "src": "./icon-256.png",

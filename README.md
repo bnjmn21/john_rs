@@ -41,7 +41,7 @@ An emulator for an imaginary basic John von Neumann architecture(s) written in R
 |`03`|`SUB` |Subtract a number from the accumulator|The address to take the number from|
 |`04`|`SAVE`|Store the value in the accumulator to memory|The address to save to|
 |`05`|`JMP` |Jump to a certain address in memory|The address to jump to|
-|`06`|`TST` |Jump 2 addresses forwards if the accumulator == 0, otherwise jump 1 as usual| |
+|`06`|`TST` |Jump 2 addresses forwards if the accumulator == 0, otherwise jump 1 as usual||
 |`07`|`INC` |Increment the value in an address by 1|The address whose value is to be incremented|
 |`08`|`DEC` |Decrement the value in an address by 1|The address whose value is to be decremented|
 |`09`|`NULL`|Set the accumulator and an address to 0|The address whose value shall no longer be positive|

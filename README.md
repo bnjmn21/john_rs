@@ -98,6 +98,13 @@ To convert any old .ram file to the new .ram format,
 
 `.ram` files can also be compressed using gzip to a `.ram.gz` file.
 
+## Roadmap
+
+- [ ] custom architectures
+- [ ] load / save ram files
+- [ ] load / save jrs files
+- [ ] additional instructions
+
 ## Links & Credits
 
 - The [web version](bnjmn21.github.io/john_rs)

@@ -29,6 +29,7 @@ An emulator for an imaginary basic John von Neumann architecture(s) written in R
 
 - No micro-instructions and therefore no custom instruction sets.
 - No control unit simulation.
+- No data bus visualisation.
 
 ## Instruction Set
 

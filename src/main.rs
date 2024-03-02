@@ -17,7 +17,7 @@ fn main() -> eframe::Result<()> {
         ..Default::default()
     };
     eframe::run_native(
-        "eframe template",
+        "John.rs",
         native_options,
         Box::new(|cc| Box::new(john_rs::JohnRs::new(cc))),
     )

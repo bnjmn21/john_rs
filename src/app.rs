@@ -1,13 +1,21 @@
+use egui::{Align, Layout};
+
+use crate::modules::Modules;
+
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)] // if we add new fields, give them default values when deserializing old state
 pub struct JohnRs {
     show_sidebar: bool,
+    modules: Modules,
 }
 
 impl Default for JohnRs {
     fn default() -> Self {
-        Self { show_sidebar: true }
+        Self {
+            show_sidebar: true,
+            modules: Default::default(),
+        }
     }
 }
 
@@ -39,20 +47,22 @@ impl eframe::App for JohnRs {
         // For inspiration and more examples, go to https://emilk.github.io/egui
 
         egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
-            // The top panel is often a good place for a menu bar:
-            egui::widgets::global_dark_light_mode_buttons(ui);
-            ui.with_layout(egui::Layout::left_to_right(egui::Align::Max), |ui| {
-                ui.toggle_value(&mut self.show_sidebar, "Sidebar");
+            ui.horizontal(|ui| {
+                egui::widgets::global_dark_light_mode_buttons(ui);
+                ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
+                    ui.toggle_value(&mut self.show_sidebar, "Sidebar");
+                });
             });
         });
 
         egui::SidePanel::right("side_panel")
             .resizable(false)
-            .show_animated(ctx, true, |ui| {
-                ui.label("Hello!");
-                ui.label("world!");
+            .show_animated(ctx, self.show_sidebar, |ui| {
+                self.modules.sidebar(ui);
             });
 
-        egui::CentralPanel::default().show(ctx, |ui| {});
+        egui::CentralPanel::default().show(ctx, |ui| {
+            self.modules.windows(ctx, ui);
+        });
     }
 }

@@ -15,6 +15,7 @@ eframe = { version = "0.26.0", default-features = false, features = [
     "persistence",   # Enable restoring app state when restarting the app.
 ] }
 log = "0.4"
+egui_commonmark = { version = "0.13.0", default-features = false, features = ["pulldown_cmark"]}
 
 # You only need serde if you want app persistence:
 serde = { version = "1", features = ["derive"] }
